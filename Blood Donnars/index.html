@@ -3,137 +3,209 @@
 <head>
     <title></title>
     <meta charset="utf-8" />
-    <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.default.min.css" rel="stylesheet" />
+    <link href="kendo/styles/kendo.mobile.all.min.css" rel="stylesheet"/>
     <link href="styles/main.css" rel="stylesheet" />
 
+    
+    
+    <!--Creste Css File-->
+    <link href="project/styles/myCss.css" rel="stylesheet"/>
+
     <script src="cordova.js"></script>
+    <!--<script src="kendo/js/kendo.mobile.min.js"></script>-->
     <script src="kendo/js/jquery.min.js"></script>
-    <script src="kendo/js/kendo.mobile.min.js"></script>
+    <script src="kendo/js/kendo.all.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
 
-    <script src="scripts/app.js"></script>
-    <script src="scripts/login.js"></script>
-    <script src="scripts/location.js"></script>
-    <script src="scripts/weather.js"></script>
+   <!-- <script src="scripts/app.js"></script>-->
+    
+    <!--Create JS File-->
+    <script src="project/script/lib/reqwest.min.js"></script>
+    <script src="project/script/lib/rsvp.min.js"></script>
+    <script src="project/script/lib/underscore.min.js"></script>
+    <script src="project/script/lib/everlive.min.js"></script>
+    <script src="project/script/lib/kendo.data.everlive.min.js"></script>
+   
+    <script src="project/script/app/myApp.js"></script>
+    <script src="project/script/app/myRegister.js"></script>
+    <script src="project/script/app/myLogin.js"></script>
+    
+    <!--Internal CSS here-->
+    <style>
+        #login .km-content
+          {
+             /* background:url('project/images/mb.jpg') no-repeat;
+              background-size:100% 100%;*/
+             /* filter:alpha(opacity=50);
+              -moz-opacity:0.5;
+              -khtml-opacity:0.5;
+              opacity:0.5;*/
+          }
+        
+        /*for back button*/
+        .km-arrow-e:after,
+        .km-arrow-e:before
+        {
+            content: "\e013";
+        }
+        
+        /*for submit button*/
+        .km-submit:after,
+        .km-submit:before
+        {
+            content: "\e037";
+        }
+        
+    </style>
 </head>
 <body>
-    <!--Home View-->
-    <div id="tabstrip-home"
-        data-role="view"
-        data-title="Home">
-        <header data-role="header">
-            <div data-role="navbar">
-                <span data-role="view-title"></span>
-                <a id="skin-change" data-role="button" data-align="right" data-click="app.changeSkin">Flat</a>
-            </div>
-        </header>
-
-        <h3>Welcome!</h3>
-        <p>
-            Telerik AppBuilder&trade; enables you to build cross-platform device applications regardless of your
-            development platform by combining the convenience of a local development toolset with the
-            power and flexibility of the cloud.
-        </p>
-        <div class="welcome-image"></div>
-    </div>
-
-    <!--Login View-->
-    <div id="tabstrip-login"
-        data-role="view"
-        data-title="Login"
-        data-model="app.loginService.viewModel">
-
-        <div class="logo-image"></div>
-        <div>
-            <h3 data-bind="visible: isLoggedIn">Welcome, <span data-bind="    text: username"></span>!</h3>
-            <input id="logout" type="submit" data-role="button" data-bind="click: onLogout, visible: isLoggedIn" value="Logout" class="login-button" />
-        </div>
-        <form data-bind="events: { keyup: checkEnter }">
-            <h3 data-bind="invisible: isLoggedIn">Enter your credentials:</h3>
-            <ul data-role="listview" data-style="inset" data-bind="invisible: isLoggedIn">
-                <li>
-                    <label>
-                        <div>Username</div>
-                        <input type="text" data-bind="value: username" />
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <div>Password</div>
-                        <input type="password" data-bind="value: password" />
-                    </label>
-                </li>
-            </ul>
-            <input id="login" type="submit" data-role="button" data-bind="click: onLogin, invisible: isLoggedIn" value="Login" class="login-button" />
-        </form>
-    </div>
-
-    <!--Location View-->
-    <div id="tabstrip-location"
-        data-role="view"
-        data-title="Location"
-        data-init="app.locationService.initLocation"
-        data-show="app.locationService.show"
-        data-hide="app.locationService.hide"
-        data-model="app.locationService.viewModel"
-        data-stretch="true">
-
-        <div id="map-canvas" class="map" data-bind="visible: isGoogleMapsInitialized"></div>
-
-        <div id="no-map" data-bind="invisible: isGoogleMapsInitialized">
-            <h3>Location requires internet connection to display the map.</h3>
-        </div>
-        <div id="map-search-wrap" class="map-tools" data-bind="visible: isGoogleMapsInitialized">
-            <div>
-                <button id="map-navigate-home" class="map-tools-button home" data-bind="click: onNavigateHome"></button>
-                <input id="map-address" type="search" class="map-tools-input" data-bind="value: address" placeholder="Address" />
-                <button id="map-search" class="map-tools-button search" data-bind="click: onSearchAddress"></button>
-            </div>
-        </div>
-    </div>
-
-    <!--Weather View-->
-    <div id="tabstrip-weather"
-        data-role="view"
-        data-title="Weather"
-        data-model="app.weatherService.viewModel">
-
-        <ul data-role="listview" data-style="inset"
-            data-bind="source: weatherDataSource"
-            data-template="weather-forecast-template">
-        </ul>
-    </div>
-
-    <!--Weather forecast template-->
-    <script id="weather-forecast-template" type="text/x-kendo-tmpl">
-        <div class="w-item-template">
-            <span class="w-icon ${image}"></span>
-            <h4 class="w-date">${day}</h4>
-            <div class="w-temp">
-                <span>${highTemperature}<sup>&deg;</sup></span>
-                <span>${lowTemperature}<sup>&deg;</sup></span>
-            </div>
-        </div>
-    </script>
-
-    <!--Layout-->
-    <div data-role="layout" data-id="tabstrip-layout">
-        <!--Header-->
+   <!--LOGIN PAGE VIEW -->
+    <div data-role="view" id="login" data-id="donnar-layout" data-title="Login"> 
         <div data-role="header">
-            <div data-role="navbar">
-                <span data-role="view-title"></span>
+            <div style="width:100%;text-align:center;background-color:#1975D1;height:45px;line-height:42px;">
+                <span style="color:white;font-size:18px;" data-role="view-title">Login</span>
             </div>
         </div>
-
-        <!--Footer-->
-        <div data-role="footer">
-            <div data-role="tabstrip">
-                <a href="#/" data-icon="home">Home</a>
-                <a href="#tabstrip-login" data-icon="contacts">Login</a>
-                <a href="#tabstrip-location" data-icon="search">Location</a>
-                <a href="#tabstrip-weather" data-icon="globe">Weather</a>
+        <!--This is a LOGIN PART-->
+        <div class="mainDiv" id="login-main-div">
+            <form id="login-form">
+                <div id="login-div" style="width:100%;height:auto;margin:0px auto;">
+                    <input type="text" name="Username" id="LoginUsername" placeholder="Username" class="loginText" style="background:url('project/images/Misc-User-icon.png');background-repeat:no-repeat;background-position:100% 8px;background-size:20px 20px;background-color:white"/><br>
+                    <input type="password" name="Password" id="LoginPassword" placeholder="Password" class="loginText" style="background:url('project/images/password-icon (1).png');background-repeat:no-repeat;background-position:100% 8px;background-size:20px 20px;background-color:white"/><br>
+           		 <a data-role="button" href="#project/views/home.html" class="button" data-bind="" style="background-color:#002E5C;filter:alpha(opacity=80);opacity:0.8;color:white">Login</a><br>
+                    <a data-role="button" href="#forgotModalView" data-rel="modalview" class="button" style="background-color:#002E5C;filter:alpha(opacity=80);opacity:0.8;color:white">Forgot Password</a><br>
+                    <div style="width:56%;margin:0px auto;margin-top:40px;margin-bottom:15px;">
+                        <a href="#register"><span style="font-size:15px;">New User Register Here</span></a>
+                    </div>
+                </div>
+            </form>
+                <div style="width:100%;height:auto;margin:0px auto;margin-top:30px;">
+                    <hr style="width:43%;float:left; border:1px solid #999999;"><span style="text-align:center;">&nbsp;&nbsp;OR&nbsp;&nbsp;</span><hr style="width:43%;float:right;border:1px solid #999999;">
+                </div>
+            	<div style="width:80%;height:auto;margin:0px auto;margin-top:30px;">
+                	<a href="#" data-role="button" style="width:100%;height:35px;background:url('project/images/images.jpg') no-repeat; background-size:100% 35px;"></a>
+                </div>
+        </div>
+    </div>
+    
+    <!--This is a FORGOT PASSWORD VIEW-->
+    <div data-role="modalview" id="forgotModalView" style="width:90%;height:180px;" data-model="app.Login">
+         <div data-role="header">
+                <div data-role="navbar" style="background-color:#1975D1;height:45px;">
+                    <span style="font-size:14px;color:white">Forgot Password</span>
+                </div>
+         </div>
+       <div style="width:90%;height:120px;margin:0px auto;margin-top:12px;">
+           <table width="100%" align="center">
+               <tbody>
+                   <tr>
+                       <td colspan="2" align="center" height="60px"><input type="text" id="userid" data-bind="value:recover" class="loginText" style="margin-top:-10px;" placeholder="Recovery Email Address"></td>
+                   </tr>
+                   <tr>
+                       <td width="50%" align="left"><a data-role="button" data-bind="click:forgotSubmit" style="width:90%;height:30px;text-align:center;background-color:#002E5C;filter:alpha(opacity=80);opacity:0.8;color:white">Submit</a></td>
+                       <td width="50%" align="right"> <a data-role="button" data-bind="click:forgotClose" style="width:90%;height:30px;text-align:center;background-color:#002E5C;filter:alpha(opacity=80);opacity:0.8;color:white">Cancel</a></td><!--background-color:#19FFD1-->
+                   </tr>
+               </tbody>
+           </table>
+       </div>
+    </div>
+    
+    <!--This is a REGISTRATION VIEW-->
+    <div data-role="view" id="register" data-title="New User" data-model="app.Register" data-show="app.Register.show">
+        <div data-role="header">
+            <div data-role="navbar" style="background-color:#1975D1;height:45px;">
+                <a data-role="backbutton" data-align="left" style="color:white;background-color:#1975D1;border:0px solid #ccc;margin-left:-15px;" data-icon="arrow-e"></a>
+                <span data-role="view-title" style="font-size:18px;color:white;"></span>
+                <a data-role="button" data-icon="submit" data-bind="click:signup" data-align="right" style="color:white;background-color:#1975D1;border:0px solid #ccc;"></a>
             </div>
         </div>
+        
+        <!--This is a REGISTRATION FORM-->
+        <form id="signUp-form">
+            <div id="signUp" class="regDiv">
+                <input type="text" name="Name" id="Name" class="loginText" style="margin-top:8px;height:35px;" data-bind="value:DisplayName" placeholder="Your Name"   required/><br>
+                <input type="email" name="Email" id="Email" class="loginText" style="margin-top:8px;height:35px;" data-bind="value:Email" placeholder="Email Address" required/><br>
+                <input type="text" name="Username" id="Username" class="loginText" style="margin-top:8px;height:35px;" data-bind="value:Username" placeholder="Username" required/><br>
+                <input type="password" name="Password" id="Password" class="loginText" style="margin-top:8px;height:35px;" data-bind="value:Password" placeholder="Password" required/><br>
+                
+                <select class="k-textbox loginText" style="margin-top:8px;font-size:12px;height:35px;" id="blood_group" data-bind="value:bloodGroup" required>
+                        <option value="0">Select Blood Group</option>
+                        <option value="O Pos">O-pos</option>
+                        <option value="O Neg">O-neg</option>
+                        <option value="A Pos">A-pos</option>
+                        <option value="A Neg">A-neg</option>
+                        <option value="B Pos">B-pos</option>
+                        <option value="B Neg">B-neg</option>
+                        <option value="AB Pos">AB-pos</option>
+                        <option value="AB Neg">AB-neg</option>
+                </select><br>
+                <select class="k-textbox loginText" style="margin-top:8px;font-size:12px;height:35px;margin-bottom:8px;" id="gender" data-bind="value:Gender" required>
+                        <option value="0">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                </select>
+                <input id="datepicker" data-bind="value:DOB" style="width:100%;height:30px;font-size:13px;" required/><br>
+                <input id="categories" class="k-textbox loginText" data-bind="value:State" style="margin-top:8px;font-size:13px;height:30px;" required/><br>
+                <input id="products" data-bind="value:City" class="k-textbox loginText" style="margin-top:8px;font-size:13px;height:30px;" required/><br>
+                 <input type="text" name="Country" id="Country" class="loginText" style="margin-top:8px;height:35px;" data-bind="value:Country" value="India" readonly required/><br>
+                <input type="number" data-bind="value:PinCode" maxlength="6" name="Pincode" id="Pincode" placeholder="City Pin Code" class="loginText" style="margin-top:8px;margin-bottom:8px;height:35px;" required/>
+            </div>
+        </form>
+        
+        <!--This is a registration Form-->
+       <!-- <form id="signup-form">
+            <div id="signup" class="regDiv">
+                 <ul data-role="listview" style="inset">
+                    <li style="margin-top:15px;height:35px;border:1px solid #ccc;">
+                        <label>
+                            <input type="text" name="Name" id="SignupName" placeholder="Name" style="width:100%;height:35px;"/>
+                        </label>
+                    </li>
+                    <li style="margin-top:10px;height:35px;border:1px solid #ccc;">
+                        <label>
+                            <input type="text" name="Username" id="SignupUsername" placeholder="Username" style="width:100%;height:35px;"/>
+                        </label>
+                    </li>
+                    <li style="margin-top:10px;height:35px;border:1px solid #ccc;">
+                        <label>
+                            <input type="text" name="Password" id="SignupPassword" placeholder="Password" style="width:100%;height:35px;"/>
+                        </label>
+                    </li>
+                    <li style="margin-top:10px;height:35px;border:1px solid #ccc;">
+                        <label>
+                            <input type="text" name="Email" id="SignupEmail" placeholder="Email" style="width:100%;height:35px;"/>
+                        </label>
+                    </li>
+                    <li style="margin-top:10px;height:35px;border:1px solid #ccc;">
+                        <label>
+                            <select id="Blood_Group" style="width:100%;" class="k-textbox">
+                                <option value="0">Select Blood Group</option>
+                                <option value="O Pos">O-pos</option>
+                                <option value="O Neg">O-neg</option>
+                                <option value="A Pos">A-pos</option>
+                                <option value="A Neg">A-neg</option>
+                                <option value="B Pos">B-pos</option>
+                                <option value="B Neg">B-neg</option>
+                                <option value="AB Pos">AB-pos</option>
+                                <option value="AB Neg">AB-neg</option>
+                            </select>
+                        </label>
+                    </li>
+                    <li style="margin-top:10px;height:35px;border:1px solid #ccc;">
+                        <label>
+                            <select id="Gender" style="width:100%;" class="k-textbox">
+                                 <option value="0">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                            </select>
+                        </label>
+                    </li>
+           	  </ul>
+            </div>
+           
+        </form>-->
     </div>
 </body>
 </html>
